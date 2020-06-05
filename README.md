@@ -24,7 +24,7 @@ line of your machine.
 ## Running
 
 To run the program with a puzzle, you need to provide it with a puzzle file (see
-the ``puzzles``) directory, e.g.:
+the ``puzzles`` directory), e.g.:
 
 ``./sudoku puzzles/9x9/116.txt``
 
