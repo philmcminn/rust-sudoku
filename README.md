@@ -40,6 +40,42 @@ solutions, add the ``--all`` switch after the puzzle input file name / string, e
 
 will find all 288 possibilities for an empty 4x4 puzzle.
 
+## Example Output
+
+```
+$ sudoku puzzles/116.txt
+
+Initial Sudoku (19/81) is:
+-------------------------
+| . 2 . | . . . | . . . |
+| . . . | 6 . . | . . 3 |
+| . 7 4 | . 8 . | . . . |
+-------------------------
+| . . . | . . 3 | . . 2 |
+| . 8 . | . 4 . | . 1 . |
+| 6 . . | 5 . . | . . . |
+-------------------------
+| . . . | . 1 . | 7 8 . |
+| 5 . . | . . 9 | . . . |
+| . . . | . . . | . 4 . |
+-------------------------
+
+Found 1 solution in 12.8ms:
+-------------------------
+| 1 2 6 | 4 3 7 | 9 5 8 |
+| 8 9 5 | 6 2 1 | 4 7 3 |
+| 3 7 4 | 9 8 5 | 1 2 6 |
+-------------------------
+| 4 5 7 | 1 9 3 | 8 6 2 |
+| 9 8 3 | 2 4 6 | 5 1 7 |
+| 6 1 2 | 5 7 8 | 3 9 4 |
+-------------------------
+| 2 6 9 | 3 1 4 | 7 8 5 |
+| 5 4 8 | 7 6 9 | 2 3 1 |
+| 7 3 1 | 8 5 2 | 6 4 9 |
+-------------------------
+```
+
 ## More About the Implementation
 
 I wrote this solver by way of starting to learn how to program in Rust. The
