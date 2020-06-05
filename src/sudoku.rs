@@ -27,7 +27,7 @@ impl Sudoku {
 
     pub fn new(dimension: usize) -> Self {
         let block_dimension = (dimension as f64).sqrt() as usize;
-        if dimension % block_dimension != 0 {
+        if block_dimension.pow(2) != dimension {
             panic!("Illegal Sudoku dimension {}", dimension);
         }
 
@@ -206,7 +206,7 @@ impl Sudoku {
                 // add the contents of each cell
                 sud_str.push(Sudoku::SPACE);
 
-                let cell_str = match self.cell_value(col, row) {
+                let cell_str = match self.cell_value(row, col) {
                         Some(val) => (val + 1).to_string(),
                         None => Sudoku::EMPTY_CELL.to_string()
                 };
