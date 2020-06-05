@@ -12,10 +12,14 @@ implementation](#more-about-the-implementation) at the end of this README file.)
 ## Building
 
 To build the project you need to [download
-Rust](https://www.rust-lang.org/tools/install) and build using Cargo. Issuing
-``cargo build --release`` will produce a binary file in the ``target/release``
-directory that you can use to run the program on the command line on your
-machine.
+Rust](https://www.rust-lang.org/tools/install) and use Cargo by simply
+issuing the command
+
+``cargo build --release``
+
+in the root directory of the project. This will produce a binary file in the
+``target/release`` directory that you can use to run the program on the command
+line of your machine.
 
 ## Running
 
