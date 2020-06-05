@@ -1,11 +1,12 @@
 # rust-sudoku
 
 This project is a Sudoku solver written in Rust, and is capable of solving all
-9x9 Sudoku puzzles I have tried it on in just a few milliseconds. The solver
-represents the puzzle as an exact cover problem, and implements Donald Knuth's
-[Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) and a version
-of the [Dancing Links technique](https://en.wikipedia.org/wiki/Dancing_Links) to
-find its solutions. (Read [more about the
+9x9 Sudoku puzzles I have tried it on in just a few milliseconds, and 16x16
+puzzles in just over half a second. The solver represents the puzzle as an exact
+cover problem, and implements Donald Knuth's [Algorithm
+X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) and a version of the
+[Dancing Links technique](https://en.wikipedia.org/wiki/Dancing_Links) to find
+its solutions. (Read [more about the
 implementation](#more-about-the-implementation) at the end of this README file.)
 
 ## Building
