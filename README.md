@@ -36,7 +36,7 @@ By default, the program terminates on finding the first solution. It is
 capable of finding all solutions, if there is more than one. To find all
 solutions, add the ``--all`` switch after the puzzle input file name / string, e.g.
 
-``./sudoku puzzles/4x4-empty.txt -all``
+``./sudoku puzzles/4x4-empty.txt --all``
 
 will find all 288 possibilities for an empty 4x4 puzzle.
 
@@ -55,7 +55,7 @@ but found the code very verbose, and that they were [not really unsuited for
 this particular task
 anyway](https://rust-unofficial.github.io/too-many-lists/fifth.html). The
 alternative would have been to reach for [unsafe
-Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html) --- however, the
+Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html) &emdash; however, the
 goal of this exercise for me was to learn Rust, and as a beginner it seemed
 wrong to be reaching for the very last chapter of the manual to find out how to
 do things that the language was not encouraging you to be doing!

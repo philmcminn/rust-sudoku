@@ -10,7 +10,7 @@ use std::time::Instant;
 
 use crate::sudoku::Sudoku;
 
-const ALL_STR: &str = "-all";
+const ALL_STR: &str = "--all";
 const USAGE_STR: &str = "Usage: sudoku filename|starting_configuration [-all]";
 const FILENAME_PARAM: usize = 1;
 const ALL_PARAM: usize = 2;
