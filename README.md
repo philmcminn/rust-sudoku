@@ -28,10 +28,10 @@ The command line will also take a string instead of a filename, e.g.:
 
 ``./sudoku .2..........6....3.7~4.8.........3..2.8..4..1.6..5.........1.7~8.5....9..........4.``
 
-where a '.' indicates an empty cell in the puzzle. Adjacent numbers must be
-separated by a non-digit character, i.e., '~' in the above example. (This is
-because the program can be used solve puzzles greater than 9x9 in size, and
-so more than one digit may be needed for a cell.)
+where a '.' indicates an empty cell in the puzzle. All numbers must be > 1.
+Adjacent numbers must be separated by a non-digit character, i.e., '~' in the
+above example. (This is because the program can be used solve puzzles greater
+than 9x9 in size, and so more than one digit may be needed for a cell.)
 
 By default, the program terminates on finding the first solution. It is
 capable of finding all solutions, if there is more than one. To find all

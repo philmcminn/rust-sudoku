@@ -52,11 +52,14 @@ impl Sudoku {
             } else {
                 if val_str.len() > 0 {
                     if let Ok(val) = val_str.parse::<usize>() {
-                        entries.push(Some(val-1));
-                        if val > max_val {
-                            max_val = val;
+                        // ignore zeros
+                        if val > 0 {
+                            entries.push(Some(val-1));
+                            if val > max_val {
+                                max_val = val;
+                            }
+                            val_str = String::new();
                         }
-                        val_str = String::new();
                     }
                 }
                 if c == Sudoku::EMPTY_CELL {
