@@ -10,15 +10,14 @@ use std::time::Instant;
 
 use crate::sudoku::Sudoku;
 
+const ALL_STR: &str = "--all";
 const USAGE_STR: &str = "Usage: sudoku filename|starting_configuration [--all]";
-const NUM_PARAMS: usize = 2;
 const FILENAME_PARAM: usize = 1;
+const ALL_PARAM: usize = 2;
 
-fn read_sudoku_str() -> String {
-    let args: Vec<String> = env::args().collect();
-
+fn read_sudoku_str(args: &Vec<String>) -> String {
     // check for correct number of parameters
-    if args.len() != NUM_PARAMS {
+    if args.len() < FILENAME_PARAM + 1 {
         println!("{}", USAGE_STR);
         process::exit(1);
     }
@@ -37,8 +36,17 @@ fn read_sudoku_str() -> String {
     }
 }
 
+fn terminate_on_first(args: &Vec<String>) -> bool {
+    if args.len() >= ALL_PARAM + 1 {
+        args[ALL_PARAM] != ALL_STR
+    } else {
+        true
+    }
+}
+
 fn main() {
-    let sudoku_str = &read_sudoku_str();
+    let args = env::args().collect();
+    let sudoku_str = &read_sudoku_str(&args);
     let sudoku = Sudoku::from(sudoku_str);
 
     println!("Initial Sudoku ({}/{}) is:\n{}",
@@ -48,7 +56,7 @@ fn main() {
 
     if sudoku.is_consistent() {
         let start_time = Instant::now();
-        let solutions = solver::solve(&sudoku, true);
+        let solutions = solver::solve(&sudoku, terminate_on_first(&args));
         let elapsed_time = start_time.elapsed();
 
         let num_solutions = solutions.len();
