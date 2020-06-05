@@ -41,17 +41,24 @@ solutions, add the ``--all`` switch after the puzzle input file name / string, e
 will find all 288 possibilities for an empty 4x4 puzzle.
 
 ## More About the Implementation
-I wrote this solver by way of starting to learn how to program in Rust. The
-Dancing Links algorithm involves modelling a sparse matrix as a set of circular,
-doubly linked lists (one for each row and one for each column).
 
-I quickly discovered, due to Rust's restrictions, that this wasn't going to be
-easy to implement! I began by playing with Rust's smart pointers, but found the
-code verbose and that were really unsuited for the task. The alternative would
-have been to reach for unsafe Rust --- however, the goal of this exercise for me
-was to learn Rust, and as a beginner it seemed wrong to be reaching for the very
-last chapter of the manual to find out how to do things you weren't really
-supposed to be doing!
+I wrote this solver by way of starting to learn how to program in Rust. The
+[Dancing Links technique](https://en.wikipedia.org/wiki/Dancing_Links) involves
+modelling a sparse matrix as a set of circular, doubly linked lists (one for
+each row and one for each column).
+
+I quickly found, however, that due to Rust's strong restrictions on data
+ownership, this wasn't going to be easy to implement! I began by playing with
+[Rust's smart
+pointers](https://doc.rust-lang.org/1.18.0/book/second-edition/ch15-00-smart-pointers.html),
+but found the code very verbose, and that they were (not really unsuited for
+this particular task
+anyway)[https://rust-unofficial.github.io/too-many-lists/fifth.html]. The
+alternative would have been to reach for (unsafe
+Rust)[https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html] --- however, the
+goal of this exercise for me was to learn Rust, and as a beginner it seemed
+wrong to be reaching for the very last chapter of the manual to find out how to
+do things that the language was not encouraging you to be doing!
 
 Instead, I implement the links within the cover matrix itself. The matrix is
 itself implemented using a Vector, but with methods to access each element at
