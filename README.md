@@ -35,7 +35,8 @@ than 9x9 in size, and so more than one digit may be needed for a cell.)
 
 By default, the program terminates on finding the first solution. It is
 capable of finding all solutions, if there is more than one. To find all
-solutions, add the ``--all`` switch after the puzzle input file name / string, e.g.
+solutions, add the ``--all`` switch after the puzzle input file name / string,
+for example:
 
 ``./sudoku puzzles/4x4/empty.txt --all``
 
