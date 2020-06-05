@@ -1,3 +1,4 @@
+use std::cmp;
 use std::fmt;
 use std::ops::Range;
 
@@ -27,7 +28,12 @@ impl Sudoku {
     const NEW_LINE: char = '\n';
     const SPACE: char = ' ';
 
-    pub fn new(dimension: usize, block_width: usize) -> Self {
+    pub fn new(dimension: usize) -> Self {
+        let block_width = (dimension as f64).sqrt() as usize;
+        if block_width.pow(2) != dimension {
+            panic!("Illegal Sudoku dimension {}", dimension);
+        }
+
         debug_assert!(dimension % block_width == 0);
 
         let num_cells = dimension * dimension;
@@ -47,60 +53,38 @@ impl Sudoku {
     }
 
     pub fn from(str: &str) -> Self {
-        const H_SEP: char = '-';
-        const V_SEP: char = '|';
-        const EMPTY_CELL: char = '.';
-        const NEW_LINE: char = '\n';
-        const SPACE: char = ' ';
-
-        // split the input string into lines
-        let mut lines: Vec<&str> = str.lines().map(str::trim).collect();
-
-        // retain only the lines starting with the horizontal block separator
-        lines.retain(|l| l.starts_with(V_SEP));
-
-        // work out the key configuration statistics of this puzzle
-        let dimension = lines.len();
-        let blocks_per_row = lines[0].matches(V_SEP).count() - 1;
-
-        // instantiate a puzzle
-        // TODO: return an error if the configuration of the puzzle is incorrect
-
-        let mut sudoku = // match
-            Sudoku::new(dimension, blocks_per_row) //{
-            ;
-            //Ok(puzzle) => puzzle,
-            // TODO: clean up this error
-            //Err(err) => return Err()
-        //};
-
-
-        // TODO: use original lines so that we can return
-        // a line number in the error
-
-        // TODO: introduce extra checking to check
-        // - number of blocks is the same on each row
-        // - correct number of values per row
-        // - values are within limits
-        let mut row = 0;
-        for line in lines {
-            let mut col = 0;
-            for elem in line.split_whitespace() {
-                if elem == V_SEP.to_string() {
-                    continue;
+        let mut max_val = 0;
+        let mut entries: Vec<Option<usize>> = Vec::new();
+        let mut val_str = String::new();
+        for c in str.chars() {
+            if c.is_ascii_digit() {
+                val_str.push(c);
+            } else {
+                if val_str.len() > 0 {
+                    match val_str.parse::<usize>() {
+                        Ok(val) => {
+                            entries.push(Some(val-1));
+                            val_str = String::new();
+                            if val > max_val {
+                                max_val = val;
+                            }
+                        },
+                        Err(_) => panic!("Could not parse {}", val_str),
+                    }
                 }
-                if elem != EMPTY_CELL.to_string() {
-                    let val = match elem.parse::<usize>() {
-                        Ok(val) => val,
-                        // TODO: return an Error with a line number
-                        Err(_) => panic!("Not a number!")
-                    };
-
-                    sudoku.set_cell_value(row, col, val-1);
+                if c == Sudoku::EMPTY_CELL {
+                    entries.push(None);
                 }
-                col += 1;
             }
-            row += 1;
+        }
+
+        let num_entries = entries.len() as f64;
+        let dimension_inferred_from_entries = num_entries.sqrt().ceil() as usize;
+        let dimension = cmp::max(max_val, dimension_inferred_from_entries);
+
+        let mut sudoku = Sudoku::new(dimension);
+        for (id, val) in entries.iter().enumerate() {
+            sudoku.cells[id] = *val;
         }
 
         sudoku
