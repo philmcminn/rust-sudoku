@@ -10,7 +10,7 @@ use std::time::Instant;
 
 use crate::sudoku::Sudoku;
 
-const USAGE_STR: &str = "Usage: sudoku filename|starting_configuration";
+const USAGE_STR: &str = "Usage: sudoku filename|starting_configuration [--all]";
 const NUM_PARAMS: usize = 2;
 const FILENAME_PARAM: usize = 1;
 
@@ -48,7 +48,7 @@ fn main() {
 
     if sudoku.is_consistent() {
         let start_time = Instant::now();
-        let solutions = solver::solve(&sudoku, false);
+        let solutions = solver::solve(&sudoku, true);
         let elapsed_time = start_time.elapsed();
 
         let num_solutions = solutions.len();

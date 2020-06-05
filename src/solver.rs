@@ -103,7 +103,7 @@ mod tests {
 
     #[test]
     fn test_cell_value_for_matrix_row() {
-        let sud = &Sudoku::new(4, 2);
+        let sud = &Sudoku::new(4);
 
 
         assert_eq!((0, 0, 1), solver::cell_value_for_matrix_row(sud, 0), "row 0");
@@ -116,7 +116,7 @@ mod tests {
 
     #[test]
     fn test_matrix_row_for_cell_value() {
-        let sud = &Sudoku::new(4, 2);
+        let sud = &Sudoku::new(4);
 
         // note the values have been decremented in the below (TODO: fix)
         assert_eq!(0,  solver::matrix_row_for_cell_value(sud, 0, 0, 0), "row 0");

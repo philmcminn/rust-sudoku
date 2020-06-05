@@ -9,10 +9,7 @@ pub struct Sudoku {
     cells: Vec<Option<usize>>,
     num_cells: usize,
     dimension: usize,
-    block_width: usize,
-    block_height: usize,
-    blocks_per_row: usize,
-    blocks_per_col: usize
+    block_dimension: usize
 }
 
 pub enum Region {
@@ -29,26 +26,18 @@ impl Sudoku {
     const SPACE: char = ' ';
 
     pub fn new(dimension: usize) -> Self {
-        let block_width = (dimension as f64).sqrt() as usize;
-        if block_width.pow(2) != dimension {
+        let block_dimension = (dimension as f64).sqrt() as usize;
+        if dimension % block_dimension != 0 {
             panic!("Illegal Sudoku dimension {}", dimension);
         }
 
-        debug_assert!(dimension % block_width == 0);
-
         let num_cells = dimension * dimension;
-        let block_height = dimension / block_width;
-        let blocks_per_row = dimension / block_width;
-        let blocks_per_col = dimension / block_height;
 
         Self {
             cells: vec![None; num_cells],
             num_cells,
             dimension,
-            block_width,
-            block_height,
-            blocks_per_row,
-            blocks_per_col
+            block_dimension
         }
     }
 
@@ -56,20 +45,18 @@ impl Sudoku {
         let mut max_val = 0;
         let mut entries: Vec<Option<usize>> = Vec::new();
         let mut val_str = String::new();
+
         for c in str.chars() {
             if c.is_ascii_digit() {
                 val_str.push(c);
             } else {
                 if val_str.len() > 0 {
-                    match val_str.parse::<usize>() {
-                        Ok(val) => {
-                            entries.push(Some(val-1));
-                            val_str = String::new();
-                            if val > max_val {
-                                max_val = val;
-                            }
-                        },
-                        Err(_) => panic!("Could not parse {}", val_str),
+                    if let Ok(val) = val_str.parse::<usize>() {
+                        entries.push(Some(val-1));
+                        if val > max_val {
+                            max_val = val;
+                        }
+                        val_str = String::new();
                     }
                 }
                 if c == Sudoku::EMPTY_CELL {
@@ -78,10 +65,21 @@ impl Sudoku {
             }
         }
 
+        if val_str.len() > 0 {
+            if let Ok(val) = val_str.parse::<usize>() {
+                entries.push(Some(val-1));
+                if val > max_val {
+                    max_val = val;
+                }
+            }
+        }
+
+        // infer the dimension of this Sudoku
         let num_entries = entries.len() as f64;
         let dimension_inferred_from_entries = num_entries.sqrt().ceil() as usize;
         let dimension = cmp::max(max_val, dimension_inferred_from_entries);
 
+        // create a new Sudoku instance and initialise the cells
         let mut sudoku = Sudoku::new(dimension);
         for (id, val) in entries.iter().enumerate() {
             sudoku.cells[id] = *val;
@@ -94,12 +92,8 @@ impl Sudoku {
         self.dimension
     }
 
-    pub fn block_width(&self) -> usize {
-        self.block_width
-    }
-
-    pub fn block_height(&self) -> usize {
-        self.block_width
+    pub fn block_dimension(&self) -> usize {
+        self.block_dimension
     }
 
     pub fn num_cells(&self) -> usize {
@@ -129,9 +123,9 @@ impl Sudoku {
         debug_assert!(row < self.dimension);
         debug_assert!(col < self.dimension);
 
-        let block_row = row / self.block_width;
-        let block_col = col / self.block_height;
-        block_col + block_row * self.blocks_per_row
+        let block_row = row / self.block_dimension;
+        let block_col = col / self.block_dimension;
+        block_col + block_row * self.block_dimension
     }
 
     pub fn completed_cells(&self) -> Vec<(usize, usize, usize)> {
@@ -189,20 +183,20 @@ impl Sudoku {
 
     pub fn to_string(&self) -> String {
         let chars_per_cell = self.dimension.to_string().len();
-        let chars_wide = ((chars_per_cell + 1) * self.dimension) + (self.blocks_per_row * 2) + 1;
+        let chars_wide = ((chars_per_cell + 1) * self.dimension) + (self.block_dimension * 2) + 1;
         let horiz_rule = &Sudoku::H_SEP.to_string().repeat(chars_wide);
         let mut sud_str = String::new();
 
         for row in 0..self.dimension {
             // add the horizontal lines
-            if row % self.block_width == 0 {
+            if row % self.block_dimension == 0 {
                 sud_str.push_str(horiz_rule);
                 sud_str.push(Sudoku::NEW_LINE);
             }
 
             for col in 0..self.dimension {
                 // check if a block separator is needed
-                if col % self.block_height == 0 {
+                if col % self.block_dimension == 0 {
                     if col > 0 {
                         sud_str.push(Sudoku::SPACE);
                     }
@@ -257,16 +251,16 @@ impl Iterator {
     }
 
     pub fn block_iter(sudoku: &Sudoku, block: usize) -> Iterator {
-        let col = (block % sudoku.block_width) * sudoku.block_width;
-        let row = (block / sudoku.block_height) * sudoku.block_height;
-        Iterator::new(sudoku, col..col + sudoku.block_width, row..row + sudoku.block_height)
+        let col = (block % sudoku.block_dimension) * sudoku.block_dimension;
+        let row = (block / sudoku.block_dimension) * sudoku.block_dimension;
+        Iterator::new(sudoku, col..col + sudoku.block_dimension, row..row + sudoku.block_dimension)
     }
 
     pub fn block_for_cell_iter(sudoku: &Sudoku, cell: (usize, usize)) -> Iterator {
         let (col, row) = cell;
-        let col = col / sudoku.block_width * sudoku.block_width;
-        let row = row / sudoku.block_height * sudoku.block_height;
-        Iterator::new(sudoku, col..col + sudoku.block_width, row..row + sudoku.block_height)
+        let col = col / sudoku.block_dimension * sudoku.block_dimension;
+        let row = row / sudoku.block_dimension * sudoku.block_dimension;
+        Iterator::new(sudoku, col..col + sudoku.block_dimension, row..row + sudoku.block_dimension)
     }
 
     pub fn col_iter(sudoku: &Sudoku, col: usize) -> Iterator {
