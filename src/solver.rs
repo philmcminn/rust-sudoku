@@ -105,20 +105,18 @@ mod tests {
     fn test_cell_value_for_matrix_row() {
         let sud = &Sudoku::new(4);
 
-
-        assert_eq!((0, 0, 1), solver::cell_value_for_matrix_row(sud, 0), "row 0");
-        assert_eq!((0, 2, 3), solver::cell_value_for_matrix_row(sud, 10), "row 10");
-        assert_eq!((1, 1, 2), solver::cell_value_for_matrix_row(sud, 21), "row 21");
-        assert_eq!((2, 0, 3), solver::cell_value_for_matrix_row(sud, 34), "row 34");
-        assert_eq!((3, 1, 4), solver::cell_value_for_matrix_row(sud, 55), "row 55");
-        assert_eq!((3, 3, 4), solver::cell_value_for_matrix_row(sud, 63), "row 63");
+        assert_eq!((0, 0, 0), solver::cell_value_for_matrix_row(sud, 0), "row 0");
+        assert_eq!((0, 2, 2), solver::cell_value_for_matrix_row(sud, 10), "row 10");
+        assert_eq!((1, 1, 1), solver::cell_value_for_matrix_row(sud, 21), "row 21");
+        assert_eq!((2, 0, 2), solver::cell_value_for_matrix_row(sud, 34), "row 34");
+        assert_eq!((3, 1, 3), solver::cell_value_for_matrix_row(sud, 55), "row 55");
+        assert_eq!((3, 3, 3), solver::cell_value_for_matrix_row(sud, 63), "row 63");
     }
 
     #[test]
     fn test_matrix_row_for_cell_value() {
         let sud = &Sudoku::new(4);
 
-        // note the values have been decremented in the below (TODO: fix)
         assert_eq!(0,  solver::matrix_row_for_cell_value(sud, 0, 0, 0), "row 0");
         assert_eq!(10, solver::matrix_row_for_cell_value(sud, 0, 2, 2), "row 10");
         assert_eq!(21, solver::matrix_row_for_cell_value(sud, 1, 1, 1), "row 21");
