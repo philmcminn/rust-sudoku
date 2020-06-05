@@ -49,13 +49,13 @@ each row and one for each column).
 
 I quickly found, however, that due to Rust's strong restrictions on data
 ownership, this wasn't going to be easy to implement! I began by playing with
-[Rust's smart
-pointers](https://doc.rust-lang.org/1.18.0/book/second-edition/ch15-00-smart-pointers.html),
-but found the code very verbose, and that they were (not really unsuited for
+(Rust's smart
+pointers)[https://doc.rust-lang.org/1.18.0/book/second-edition/ch15-00-smart-pointers.html],
+but found the code very verbose, and that they were [not really unsuited for
 this particular task
-anyway)[https://rust-unofficial.github.io/too-many-lists/fifth.html]. The
-alternative would have been to reach for (unsafe
-Rust)[https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html] --- however, the
+anyway](https://rust-unofficial.github.io/too-many-lists/fifth.html). The
+alternative would have been to reach for [unsafe
+Rust](https://doc.rust-lang.org/book/ch19-01-unsafe-rust.html) --- however, the
 goal of this exercise for me was to learn Rust, and as a beginner it seemed
 wrong to be reaching for the very last chapter of the manual to find out how to
 do things that the language was not encouraging you to be doing!
