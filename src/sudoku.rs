@@ -28,7 +28,9 @@ impl Sudoku {
     pub fn new(dimension: usize) -> Self {
         let block_dimension = (dimension as f64).sqrt() as usize;
         if block_dimension.pow(2) != dimension {
-            panic!("Illegal Sudoku dimension {}", dimension);
+            // TODO: propagate this as an error
+            println!("Illegal Sudoku dimension: {}", dimension);
+            std::process::exit(1);
         }
 
         let num_cells = dimension * dimension;
