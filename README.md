@@ -44,7 +44,7 @@ will find all 288 possibilities for an empty 4x4 puzzle.
 ## Example Output
 
 ```
-$ sudoku puzzles/16x16/1.txt                                                    828ms  Fri  5 Jun 23:40:43 2020
+$ sudoku puzzles/16x16/1.txt
 Initial Sudoku (95/256) is:
 ---------------------------------------------------------
 |  . 13 15  . |  .  .  .  3 |  .  . 12  . |  . 10 16  . |
