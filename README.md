@@ -17,3 +17,8 @@ To run the program with a puzzle, you need to provide it with a puzzle file (see
 the ``puzzles``) directory, e.g.:
 
 ``./sudoku puzzles/116.txt``
+
+## Known bugs
+
+The file reader is flaky at present and is prone to crashing on valid files.
+Fixes to follow soon...
