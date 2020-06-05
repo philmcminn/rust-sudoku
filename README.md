@@ -1,11 +1,12 @@
 # rust-sudoku
 
-This project is a Sudoku solver written in Rust, capable of solving most 9x9
-Sudoku puzzles in a few milliseconds. The solver represents the puzzle as
-an exact cover problem, and implements Donald Knuth's
+This project is a Sudoku solver written in Rust, and is capable of solving all
+9x9 Sudoku puzzles I have tried it on in just a few milliseconds. The solver
+represents the puzzle as an exact cover problem, and implements Donald Knuth's
 [Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) and a version
 of the [Dancing Links technique](https://en.wikipedia.org/wiki/Dancing_Links)
-to find its solutions. More implementation details to follow soon!
+to find its solutions. (Read more about the implementation at the end of
+this README file.)
 
 ## Building
 
@@ -38,3 +39,24 @@ solutions, add the ``--all`` switch after the puzzle input file name / string, e
 ``./sudoku puzzles/4x4-empty.txt -all``
 
 will find all 288 possibilities for an empty 4x4 puzzle.
+
+## More About the Implementation
+I wrote this solver by way of starting to learn how to program in Rust. The
+Dancing Links algorithm involves modelling a sparse matrix as a set of circular,
+doubly linked lists (one for each row and one for each column).
+
+I quickly discovered, due to Rust's restrictions, that this wasn't going to be
+easy to implement! I began by playing with Rust's smart pointers, but found the
+code verbose and that were really unsuited for the task. The alternative would
+have been to reach for unsafe Rust --- however, the goal of this exercise for me
+was to learn Rust, and as a beginner it seemed wrong to be reaching for the very
+last chapter of the manual to find out how to do things you weren't really
+supposed to be doing!
+
+Instead, I implement the links within the cover matrix itself. The matrix is
+itself implemented using a Vector, but with methods to access each element at
+each row and column position. Each matrix element is a ``struct`` that involves
+four indexes to the next occupied elements in the matrix situated to the top,
+left, right and bottom. These indexes are removed and reinstated in a similar
+fashion to the pointers used in the doubly-linked lists of Knuth's original
+algorithm.
