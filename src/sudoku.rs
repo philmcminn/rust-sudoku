@@ -210,7 +210,8 @@ impl Sudoku {
                         Some(val) => (val + 1).to_string(),
                         None => Sudoku::EMPTY_CELL.to_string()
                 };
-                sud_str.push_str(&cell_str);
+
+                sud_str = format!("{}{:>w$}", sud_str, cell_str, w=chars_per_cell);
             }
 
             // close off the end of the row
