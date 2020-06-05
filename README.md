@@ -1,7 +1,10 @@
 # rust-sudoku
 
 This project is a Sudoku solver written in Rust, capable of solving most 9x9
-Sudoku puzzles in a few milliseconds.
+Sudoku puzzles in a few milliseconds. The solver implements Donald Knuth's
+[Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) and a version
+of the [Dancing Links technique](https://en.wikipedia.org/wiki/Dancing_Links).
+More implementation details to follow soon!
 
 To build the project you need to [download
 Rust](https://www.rust-lang.org/tools/install) and build using Cargo. Issuing
