@@ -21,7 +21,7 @@ machine.
 To run the program with a puzzle, you need to provide it with a puzzle file (see
 the ``puzzles``) directory, e.g.:
 
-``./sudoku puzzles/116.txt``
+``./sudoku puzzles/9x9/116.txt``
 
 The command line will also take a string instead of a filename, e.g.:
 
@@ -36,7 +36,7 @@ By default, the program terminates on finding the first solution. It is
 capable of finding all solutions, if there is more than one. To find all
 solutions, add the ``--all`` switch after the puzzle input file name / string, e.g.
 
-``./sudoku puzzles/4x4-empty.txt --all``
+``./sudoku puzzles/4x4/empty.txt --all``
 
 will find all 288 possibilities for an empty 4x4 puzzle.
 
