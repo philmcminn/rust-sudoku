@@ -1,6 +1,3 @@
-pub mod matrix;
-pub mod iterator;
-
 struct Vertex {
     id: usize,
     active: bool,
