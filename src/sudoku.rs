@@ -169,21 +169,20 @@ impl Sudoku {
     }
 
     fn is_region_consistent(&self, region: Region) -> bool {
-        let mut completed = Vec::new();
-        let mut uncompleted = 0;
+        let mut completed = vec![false; self.dimension];
 
         for cell in Iterator::region_iter(self, region) {
             let (row, col) = cell;
             if let Some(val) = self.cell_value(row, col) {
-                if !completed.contains(&val) {
-                    completed.push(val);
+                if completed[val] {
+                    return false;
+                } else {
+                    completed[val] = true;
                 }
-            } else {
-                uncompleted += 1;
             }
         }
 
-        completed.len() + uncompleted == self.dimension
+        true
     }
 
     pub fn to_string(&self) -> String {
@@ -322,5 +321,63 @@ impl StdIterator for Iterator {
         } else {
             None
         }
+    }
+}
+
+mod tests {
+    use super::Sudoku;
+
+    #[test]
+    fn test_is_consistent_row() {
+        let mut sudoku = Sudoku::new(4);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(0, 0, 1);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(1, 0, 2);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(2, 0, 3);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(3, 0, 1);
+        assert!(!sudoku.is_completed());
+    }
+
+    #[test]
+    fn test_is_consistent_column() {
+        let mut sudoku = Sudoku::new(4);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(0, 0, 1);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(0, 1, 2);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(0, 2, 3);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(0, 3, 1);
+        assert!(!sudoku.is_completed());
+    }
+
+    #[test]
+    fn test_is_consistent_block() {
+        let mut sudoku = Sudoku::new(4);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(0, 0, 1);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(0, 1, 2);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(1, 0, 3);
+        assert!(sudoku.is_consistent());
+
+        sudoku.set_cell_value(1, 1, 1);
+        assert!(!sudoku.is_completed());
     }
 }

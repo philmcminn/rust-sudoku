@@ -54,6 +54,11 @@ fn main() {
              sudoku.num_cells(),
              sudoku);
 
+    let start_time = Instant::now();
+    sudoku.is_consistent();
+    let elapsed_time = start_time.elapsed();
+    println!("Time taken {:.1?}:", elapsed_time);
+
     if sudoku.is_consistent() {
         let start_time = Instant::now();
         let solutions = solver::solve(&sudoku, terminate_on_first(&args));
