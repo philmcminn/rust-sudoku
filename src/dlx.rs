@@ -9,7 +9,7 @@ struct Vertex {
     bottom_id: usize
 }
 
-pub struct Matrix {
+pub struct DLX {
     vertices: Vec<Vertex>,
     active_cols: Vec<bool>,
     col_element_counts: Vec<usize>,
@@ -18,7 +18,7 @@ pub struct Matrix {
     num_cols: usize
 }
 
-impl Matrix {
+impl DLX {
     pub fn new(num_rows: usize, num_cols: usize) -> Self {
         // instantiate the matrix
         let mut mat = Self {
@@ -315,20 +315,20 @@ impl Matrix {
 }
 
 mod tests {
-    use super::Matrix;
+    use super::DLX;
 
     #[test]
     fn test_matrix_new() {
         let num_rows = 3;
         let num_cols = 3;
         let num_vertices = (num_rows + 1) * (num_cols + 1);
-        let mat = Matrix::new(num_rows, num_cols);
+        let mat = DLX::new(num_rows, num_cols);
         assert_eq!(num_vertices, mat.vertices.len());
     }
 
     #[test]
     fn test_matrix_element_vertex_id() {
-        let mat = Matrix::new(3, 3);
+        let mat = DLX::new(3, 3);
         assert_eq!(5, mat.element_vertex_id(0, 0));
         assert_eq!(6, mat.element_vertex_id(0, 1));
         assert_eq!(7, mat.element_vertex_id(0, 2));
@@ -342,7 +342,7 @@ mod tests {
 
     #[test]
     fn test_matrix_row_vertex_id() {
-        let mat = Matrix::new(3, 3);
+        let mat = DLX::new(3, 3);
         assert_eq!(4, mat.row_vertex_id(0));
         assert_eq!(8, mat.row_vertex_id(1));
         assert_eq!(12, mat.row_vertex_id(2));
@@ -350,7 +350,7 @@ mod tests {
 
     #[test]
     fn test_matrix_col_vertex_id() {
-        let mat = Matrix::new(3, 3);
+        let mat = DLX::new(3, 3);
         assert_eq!(1, mat.col_vertex_id(0));
         assert_eq!(2, mat.col_vertex_id(1));
         assert_eq!(3, mat.col_vertex_id(2));
@@ -359,20 +359,20 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_matrix_element_vertex_id_panic_col() {
-        let mat = Matrix::new(3, 3);
+        let mat = DLX::new(3, 3);
         mat.element_vertex_id(4, 0);
     }
 
     #[test]
     #[should_panic]
     fn test_matrix_element_vertex_id_panic_row() {
-        let mat = Matrix::new(3, 3);
+        let mat = DLX::new(3, 3);
         mat.element_vertex_id(0, 4);
     }
 
     #[test]
     fn test_matrix_set_element() {
-        let mut mat = Matrix::new(3, 3);
+        let mut mat = DLX::new(3, 3);
         mat.set_element(0, 1);
         assert_eq!(false, mat.vertices[mat.element_vertex_id(0, 0)].active);
         assert_eq!(true, mat.vertices[mat.element_vertex_id(0, 1)].active);
@@ -380,7 +380,7 @@ mod tests {
 
     #[test]
     fn test_matrix_indices_one_element() {
-        let mut mat = Matrix::new(6, 3);
+        let mut mat = DLX::new(6, 3);
         mat.set_element(3, 1);
         mat.initialise_edges();
 
@@ -399,7 +399,7 @@ mod tests {
 
     #[test]
     fn test_matrix_col_indices() {
-        let mut mat = Matrix::new(6, 3);
+        let mut mat = DLX::new(6, 3);
         mat.set_element(1, 1);
         mat.set_element(3, 1);
         mat.set_element(5, 1);
@@ -431,7 +431,7 @@ mod tests {
 
     #[test]
     fn test_matrix_row_indices() {
-        let mut mat = Matrix::new(3, 6);
+        let mut mat = DLX::new(3, 6);
         mat.set_element(1, 1);
         mat.set_element(1, 3);
         mat.set_element(1, 5);
@@ -461,7 +461,7 @@ mod tests {
 
     #[test]
     fn test_matrix_cover_elements() {
-        let mut mat = Matrix::new(6, 2);
+        let mut mat = DLX::new(6, 2);
 
         mat.set_element(1, 1);
         mat.set_element(3, 1);
@@ -492,7 +492,7 @@ mod tests {
 
     #[test]
     fn test_matrix_uncover_elements() {
-        let mut mat = Matrix::new(6, 2);
+        let mut mat = DLX::new(6, 2);
 
         mat.set_element(1, 1);
         mat.set_element(3, 1);
@@ -525,7 +525,7 @@ mod tests {
 
     // TODO: more tests
     // fn example_matrix() -> Matrix {
-    //     let mut mat = Matrix::new(9, 6);
+    //     let mut mat = DLX::new(9, 6);
     //     mat.set_element(0, 0);
     //     mat.set_element(0, 3);
     //     mat.set_element(1, 1);

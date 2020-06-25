@@ -1,10 +1,10 @@
-use super::matrix::Matrix;
+use super::dlx::DLX;
 use super::Sudoku;
 
 pub fn solve(sudoku: &Sudoku, terminate_on_first: bool) -> Vec<Sudoku> {
     // initialise the matrix
     let (num_rows, num_cols) = matrix_dimensions(sudoku);
-    let mut mat = Matrix::new(num_rows, num_cols);
+    let mut mat = DLX::new(num_rows, num_cols);
 
     // populate the matrix and eliminate any rows corresponding
     // to completed positions in the initial provided Sudoku
@@ -31,7 +31,7 @@ fn matrix_dimensions(sudoku: &Sudoku) -> (usize, usize) {
     (num_rows, num_cols)
 }
 
-fn populate_matrix(matrix: &mut Matrix, sudoku: &Sudoku) {
+fn populate_matrix(matrix: &mut DLX, sudoku: &Sudoku) {
     let region_width = sudoku.dimension().pow(2);
 
     for row in 0..sudoku.dimension() {
@@ -64,7 +64,7 @@ fn populate_matrix(matrix: &mut Matrix, sudoku: &Sudoku) {
     }
 }
 
-fn eliminate_rows_for_completed_cells(matrix: &mut Matrix, sudoku: &Sudoku) {
+fn eliminate_rows_for_completed_cells(matrix: &mut DLX, sudoku: &Sudoku) {
     for (row, col, val) in sudoku.completed_cells() {
         let mat_row = matrix_row_for_cell_value(sudoku, row, col, val);
         matrix.eliminate_row(mat_row);
@@ -98,7 +98,7 @@ fn complete_sudoku(sudoku: &Sudoku, solution: &Vec<usize>) -> Sudoku {
 
 mod tests {
     use super::Sudoku;
-    use super::Matrix;
+    use super::DLX;
     use super::super::solver; // TODO: is there a better way to state this
 
     #[test]

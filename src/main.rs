@@ -1,5 +1,5 @@
 mod sudoku;
-mod matrix;
+mod dlx;
 mod solver;
 mod table;
 
