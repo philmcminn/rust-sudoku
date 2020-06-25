@@ -1,3 +1,7 @@
+use std::ops::Range;
+
+use core::iter::Iterator as StdIterator;
+
 #[derive(Clone)]
 pub struct Matrix<T: Clone> {
     elements: Vec<T>,
@@ -51,5 +55,76 @@ impl<T: Clone> Matrix<T> {
 
     pub fn num_elements(&self) -> usize {
         self.num_elements
+    }
+}
+
+
+pub struct Iterator {
+    rows: Range<usize>,
+    cols: Range<usize>,
+    curr_id: Option<(usize, usize)>,
+    next_id: Option<(usize, usize)>,
+    num_rows: usize,
+    num_cols: usize
+}
+
+impl Iterator {
+
+    pub fn new<T: Clone>(matrix: &Matrix<T>, cols: Range<usize>, rows: Range<usize>) -> Iterator {
+        let mut matrix_iter = Iterator {rows,
+                                        cols,
+                                        curr_id: None,
+                                        next_id: None,
+                                        num_rows: matrix.num_rows,
+                                        num_cols: matrix.num_cols};
+        matrix_iter.reset();
+        matrix_iter
+    }
+
+    pub fn with_col<T: Clone>(matrix: &Matrix<T>, col: usize) -> Iterator {
+        Iterator::new(matrix, col..col+1, 0..matrix.num_rows())
+    }
+
+    pub fn with_row<T: Clone>(matrix: &Matrix<T>, row: usize) -> Iterator {
+        Iterator::new(matrix, 0..matrix.num_cols, row..row+1)
+    }
+
+    pub fn reset(&mut self) {
+        self.next_id = None;
+
+        if self.cols.start > self.num_cols || self.rows.start > self.num_rows {
+            self.curr_id = None;
+        }
+
+        self.curr_id = Some((self.cols.start, self.rows.start));
+    }
+}
+
+impl StdIterator for Iterator {
+    type Item = (usize, usize);
+
+    fn next(&mut self) -> Option<(usize, usize)> {
+        if let Some((col, row)) = self.curr_id {
+            let this = self.curr_id;
+
+            let mut next_col = col + 1;
+            let mut next_row = row;
+            if next_col >= self.cols.end || next_col >= self.num_cols {
+                next_col = self.cols.start;
+                next_row = row + 1;
+            }
+
+            self.curr_id = {
+                if next_row >= self.rows.end || next_row >= self.num_rows {
+                    None
+                } else {
+                    Some((next_col, next_row))
+                }
+            };
+
+            this
+        } else {
+            None
+        }
     }
 }

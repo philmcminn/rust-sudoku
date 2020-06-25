@@ -36,7 +36,7 @@ fn populate_matrix(matrix: &mut DLX, sudoku: &Sudoku) {
 
     for row in 0..sudoku.dimension() {
         for col in 0..sudoku.dimension() {
-            for val in 0..sudoku.dimension() {
+            for val in 1..=sudoku.dimension() {
                 // current row in the matrix
                 let mat_row = matrix_row_for_cell_value(sudoku, row, col, val);
 
@@ -46,18 +46,18 @@ fn populate_matrix(matrix: &mut DLX, sudoku: &Sudoku) {
 
                 // rows
                 let mat_col = region_width +
-                              (row * sudoku.dimension()) + val;
+                              (row * sudoku.dimension()) + (val - 1);
                 matrix.set_element(mat_row, mat_col);
 
                 // cols
                 let mat_col = (region_width * 2) +
-                              (col * sudoku.dimension()) + val;
+                              (col * sudoku.dimension()) + (val - 1);
                 matrix.set_element(mat_row, mat_col);
 
                 // blocks
                 let mat_col = (region_width * 3) +
                               (sudoku.block_no(row, col) * sudoku.dimension()) +
-                              val;
+                              (val - 1);
                 matrix.set_element(mat_row, mat_col);
             }
         }
@@ -73,7 +73,7 @@ fn eliminate_rows_for_completed_cells(matrix: &mut DLX, sudoku: &Sudoku) {
 
 // take a row, col, and value of a Sudoku cell and find the corresponding matrix row number
 fn matrix_row_for_cell_value(sudoku: &Sudoku, row: usize, col: usize, val: usize) -> usize {
-    val + (sudoku.dimension() * (col + row * sudoku.dimension()))
+    (val - 1) + (sudoku.dimension() * (col + row * sudoku.dimension()))
 }
 
 // get the row, col and value of a Sudoku cell corresponding to a matrix row number
@@ -81,7 +81,7 @@ fn matrix_row_for_cell_value(sudoku: &Sudoku, row: usize, col: usize, val: usize
 fn cell_value_for_matrix_row(sudoku: &Sudoku, mat_row: usize) -> (usize, usize, usize) {
     let row = mat_row / sudoku.dimension().pow(2);
     let col = (mat_row / sudoku.dimension()) % sudoku.dimension();
-    let val = mat_row % sudoku.dimension();
+    let val = (mat_row % sudoku.dimension()) + 1;
 
     (row, col, val)
 }
@@ -105,23 +105,23 @@ mod tests {
     fn test_cell_value_for_matrix_row() {
         let sud = &Sudoku::new(4);
 
-        assert_eq!((0, 0, 0), solver::cell_value_for_matrix_row(sud, 0), "row 0");
-        assert_eq!((0, 2, 2), solver::cell_value_for_matrix_row(sud, 10), "row 10");
-        assert_eq!((1, 1, 1), solver::cell_value_for_matrix_row(sud, 21), "row 21");
-        assert_eq!((2, 0, 2), solver::cell_value_for_matrix_row(sud, 34), "row 34");
-        assert_eq!((3, 1, 3), solver::cell_value_for_matrix_row(sud, 55), "row 55");
-        assert_eq!((3, 3, 3), solver::cell_value_for_matrix_row(sud, 63), "row 63");
+        assert_eq!((0, 0, 1), solver::cell_value_for_matrix_row(sud, 0), "row 0");
+        assert_eq!((0, 2, 3), solver::cell_value_for_matrix_row(sud, 10), "row 10");
+        assert_eq!((1, 1, 2), solver::cell_value_for_matrix_row(sud, 21), "row 21");
+        assert_eq!((2, 0, 3), solver::cell_value_for_matrix_row(sud, 34), "row 34");
+        assert_eq!((3, 1, 4), solver::cell_value_for_matrix_row(sud, 55), "row 55");
+        assert_eq!((3, 3, 4), solver::cell_value_for_matrix_row(sud, 63), "row 63");
     }
 
     #[test]
     fn test_matrix_row_for_cell_value() {
         let sud = &Sudoku::new(4);
 
-        assert_eq!(0,  solver::matrix_row_for_cell_value(sud, 0, 0, 0), "row 0");
-        assert_eq!(10, solver::matrix_row_for_cell_value(sud, 0, 2, 2), "row 10");
-        assert_eq!(21, solver::matrix_row_for_cell_value(sud, 1, 1, 1), "row 21");
-        assert_eq!(34, solver::matrix_row_for_cell_value(sud, 2, 0, 2), "row 34");
-        assert_eq!(55, solver::matrix_row_for_cell_value(sud, 3, 1, 3), "row 55");
-        assert_eq!(63, solver::matrix_row_for_cell_value(sud, 3, 3, 3), "row 63");
+        assert_eq!(0,  solver::matrix_row_for_cell_value(sud, 0, 0, 1), "row 0");
+        assert_eq!(10, solver::matrix_row_for_cell_value(sud, 0, 2, 3), "row 10");
+        assert_eq!(21, solver::matrix_row_for_cell_value(sud, 1, 1, 2), "row 21");
+        assert_eq!(34, solver::matrix_row_for_cell_value(sud, 2, 0, 3), "row 34");
+        assert_eq!(55, solver::matrix_row_for_cell_value(sud, 3, 1, 4), "row 55");
+        assert_eq!(63, solver::matrix_row_for_cell_value(sud, 3, 3, 4), "row 63");
     }
 }

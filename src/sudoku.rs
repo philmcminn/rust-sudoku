@@ -1,22 +1,14 @@
 use std::cmp;
 use std::fmt;
-use std::ops::Range;
-
-use core::iter::Iterator as StdIterator;
 
 use super::matrix::Matrix;
+use super::matrix::Iterator;
 
 #[derive(Clone)]
 pub struct Sudoku {
     cells: Matrix<usize>,
     dimension: usize,
     block_dimension: usize
-}
-
-pub enum Region {
-    Row(usize),
-    Col(usize),
-    Block(usize)
 }
 
 impl Sudoku {
@@ -122,7 +114,7 @@ impl Sudoku {
     }
 
     pub fn set_cell_value(&mut self, row: usize, col: usize, val: usize) {
-        debug_assert!(val < self.dimension);
+        debug_assert!(val > 0 && val <= self.dimension);
         self.cells.set_element(row, col, val);
     }
 
@@ -157,29 +149,41 @@ impl Sudoku {
 
     pub fn is_consistent(&self) -> bool {
         for i in 0..self.dimension {
-            if !self.is_region_consistent(Region::Block(i)) {
+            // check block i is consistent
+            let col = (i % self.block_dimension) * self.block_dimension;
+            let row = (i / self.block_dimension) * self.block_dimension;
+            let block_iterator = Iterator::new(&self.cells,
+                                               col..col + self.block_dimension,
+                                               row..row + self.block_dimension);
+            if !self.is_region_consistent(block_iterator) {
                 return false;
             }
-            if !self.is_region_consistent(Region::Row(i)) {
+
+            // check row i is consistent
+            let row_iterator = Iterator::with_row(&self.cells, i);
+            if !self.is_region_consistent(row_iterator) {
                 return false;
             }
-            if !self.is_region_consistent(Region::Col(i)) {
+
+            // check col i is consistent
+            let col_iterator = Iterator::with_col(&self.cells, i);
+            if !self.is_region_consistent(col_iterator) {
                 return false;
             }
         }
         true
     }
 
-    fn is_region_consistent(&self, region: Region) -> bool {
+    fn is_region_consistent(&self, iterator: Iterator) -> bool {
         let mut completed = vec![false; self.dimension];
 
-        for cell in Iterator::region_iter(self, region) {
+        for cell in iterator {
             let (row, col) = cell;
             if let Some(val) = self.cell_value(row, col) {
-                if completed[val] {
+                if completed[val - 1] {
                     return false;
                 } else {
-                    completed[val] = true;
+                    completed[val - 1] = true;
                 }
             }
         }
@@ -234,95 +238,6 @@ impl Sudoku {
 impl fmt::Display for Sudoku {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.to_string())
-    }
-}
-
-pub struct Iterator {
-    cols: Range<usize>,
-    rows: Range<usize>,
-    curr_id: Option<(usize, usize)>,
-    next_id: Option<(usize, usize)>,
-    dimension: usize
-}
-
-impl Iterator {
-
-    pub fn new(sudoku: &Sudoku, cols: Range<usize>, rows: Range<usize>) -> Iterator {
-        let mut sud_iter = Iterator {cols,
-                                     rows,
-                                     curr_id: None,
-                                     next_id: None,
-                                     dimension: sudoku.dimension};
-        sud_iter.reset();
-        sud_iter
-    }
-
-    pub fn block_iter(sudoku: &Sudoku, block: usize) -> Iterator {
-        let col = (block % sudoku.block_dimension) * sudoku.block_dimension;
-        let row = (block / sudoku.block_dimension) * sudoku.block_dimension;
-        Iterator::new(sudoku, col..col + sudoku.block_dimension, row..row + sudoku.block_dimension)
-    }
-
-    pub fn block_for_cell_iter(sudoku: &Sudoku, cell: (usize, usize)) -> Iterator {
-        let (col, row) = cell;
-        let col = col / sudoku.block_dimension * sudoku.block_dimension;
-        let row = row / sudoku.block_dimension * sudoku.block_dimension;
-        Iterator::new(sudoku, col..col + sudoku.block_dimension, row..row + sudoku.block_dimension)
-    }
-
-    pub fn col_iter(sudoku: &Sudoku, col: usize) -> Iterator {
-        Iterator::new(sudoku, col..col+1, 0..sudoku.dimension)
-    }
-
-    pub fn row_iter(sudoku: &Sudoku, row: usize) -> Iterator {
-        Iterator::new(sudoku, 0..sudoku.dimension, row..row+1)
-    }
-
-    pub fn region_iter(sudoku: &Sudoku, region: Region) -> Iterator {
-        match region {
-            Region::Block(block) => Iterator::block_iter(sudoku, block),
-            Region::Col(col) => Iterator::col_iter(sudoku, col),
-            Region::Row(row) => Iterator::row_iter(sudoku, row)
-        }
-    }
-
-    pub fn reset(&mut self) {
-        self.next_id = None;
-
-        if self.cols.start > self.dimension || self.rows.start > self.dimension {
-            self.curr_id = None;
-        }
-
-        self.curr_id = Some((self.cols.start, self.rows.start));
-    }
-}
-
-impl StdIterator for Iterator {
-    type Item = (usize, usize);
-
-    fn next(&mut self) -> Option<(usize, usize)> {
-        if let Some((col, row)) = self.curr_id {
-            let this = self.curr_id;
-
-            let mut next_col = col + 1;
-            let mut next_row = row;
-            if next_col >= self.cols.end || next_col >= self.dimension {
-                next_col = self.cols.start;
-                next_row = row + 1;
-            }
-
-            self.curr_id = {
-                if next_row >= self.rows.end || next_row >= self.dimension {
-                    None
-                } else {
-                    Some((next_col, next_row))
-                }
-            };
-
-            this
-        } else {
-            None
-        }
     }
 }
 
