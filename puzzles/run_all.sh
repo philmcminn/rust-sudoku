@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-cd ..
+# THIS SCRIPT IS DESIGNED TO BE RUN FROM THE ROOT (PARENT) DIRECTORY
+# i.e. ./puzzles/run_all.sh
+
 echo "Building..."
 cargo build --release
 sudoku=./target/release/sudoku
