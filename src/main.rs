@@ -1,6 +1,7 @@
-mod sudoku;
 mod dlx;
+mod matrix;
 mod solver;
+mod sudoku;
 
 use std::fs;
 use std::env;
