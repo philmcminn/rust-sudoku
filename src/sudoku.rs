@@ -259,7 +259,7 @@ mod tests {
         assert!(sudoku.is_consistent());
 
         sudoku.set_cell_value(3, 0, 1);
-        assert!(!sudoku.is_completed());
+        assert!(!sudoku.is_consistent());
     }
 
     #[test]
@@ -277,7 +277,7 @@ mod tests {
         assert!(sudoku.is_consistent());
 
         sudoku.set_cell_value(0, 3, 1);
-        assert!(!sudoku.is_completed());
+        assert!(!sudoku.is_consistent());
     }
 
     #[test]
@@ -295,6 +295,6 @@ mod tests {
         assert!(sudoku.is_consistent());
 
         sudoku.set_cell_value(1, 1, 1);
-        assert!(!sudoku.is_completed());
+        assert!(!sudoku.is_consistent());
     }
 }
