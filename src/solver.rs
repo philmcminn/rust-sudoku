@@ -1,28 +1,29 @@
 use super::dlx::DLX;
+use super::matrix::Matrix;
 use super::Sudoku;
 
-pub fn solve(sudoku: &Sudoku, terminate_on_first: bool) -> Vec<Sudoku> {
+pub fn solve(sudoku: &Sudoku, terminate_on_first: bool) { // -> Vec<Sudoku> {
     // initialise the matrix
     let (num_rows, num_cols) = matrix_dimensions(sudoku);
-    let mut mat = DLX::new(num_rows, num_cols);
+    let mut matrix = Matrix::new(false, num_rows, num_cols);
 
     // populate the matrix and eliminate any rows corresponding
     // to completed positions in the initial provided Sudoku
-    populate_matrix(&mut mat, sudoku);
-    eliminate_rows_for_completed_cells(&mut mat, sudoku);
+    populate_matrix(&mut matrix, sudoku);
+    // eliminate_rows_for_completed_cells(&mut dlx, sudoku);
 
     // find the solution(s)
-    let solutions = mat.find_solutions(terminate_on_first);
+    // let solutions = mat.find_solutions(terminate_on_first);
 
     // convert the solutions into completed Sudoku(s)
-    let mut completed_sudokus = Vec::new();
-    for solution in solutions {
-        let completed_solution = complete_sudoku(&sudoku, &solution);
-        completed_sudokus.push(completed_solution);
-    }
+    // let mut completed_sudokus = Vec::new();
+    // for solution in solutions {
+    //     let completed_solution = complete_sudoku(&sudoku, &solution);
+    //     completed_sudokus.push(completed_solution);
+    // }
 
     // return the result
-    completed_sudokus
+    // completed_sudokus
 }
 
 fn matrix_dimensions(sudoku: &Sudoku) -> (usize, usize) {
@@ -31,7 +32,7 @@ fn matrix_dimensions(sudoku: &Sudoku) -> (usize, usize) {
     (num_rows, num_cols)
 }
 
-fn populate_matrix(matrix: &mut DLX, sudoku: &Sudoku) {
+fn populate_matrix(matrix: &mut Matrix<bool>, sudoku: &Sudoku) {
     let region_width = sudoku.dimension().pow(2);
 
     for row in 0..sudoku.dimension() {
@@ -42,32 +43,32 @@ fn populate_matrix(matrix: &mut DLX, sudoku: &Sudoku) {
 
                 // cells
                 let mat_col = col + row * sudoku.dimension();
-                matrix.set_element(mat_row, mat_col);
+                matrix.set_element(mat_row, mat_col, true);
 
                 // rows
                 let mat_col = region_width +
                               (row * sudoku.dimension()) + (val - 1);
-                matrix.set_element(mat_row, mat_col);
+                matrix.set_element(mat_row, mat_col, true);
 
                 // cols
                 let mat_col = (region_width * 2) +
                               (col * sudoku.dimension()) + (val - 1);
-                matrix.set_element(mat_row, mat_col);
+                matrix.set_element(mat_row, mat_col, true);
 
                 // blocks
                 let mat_col = (region_width * 3) +
                               (sudoku.block_no(row, col) * sudoku.dimension()) +
                               (val - 1);
-                matrix.set_element(mat_row, mat_col);
+                matrix.set_element(mat_row, mat_col, true);
             }
         }
     }
 }
 
-fn eliminate_rows_for_completed_cells(matrix: &mut DLX, sudoku: &Sudoku) {
+fn eliminate_rows_for_completed_cells(dlx: &mut DLX, sudoku: &Sudoku) {
     for (row, col, val) in sudoku.completed_cells() {
         let mat_row = matrix_row_for_cell_value(sudoku, row, col, val);
-        matrix.eliminate_row(mat_row);
+        dlx.eliminate_row(mat_row);
     }
 }
 

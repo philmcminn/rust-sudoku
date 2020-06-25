@@ -56,29 +56,29 @@ fn main() {
              sudoku);
 
     if sudoku.is_consistent() {
-        let start_time = Instant::now();
-        let solutions = solver::solve(&sudoku, terminate_on_first(&args));
-        let elapsed_time = start_time.elapsed();
-
-        let num_solutions = solutions.len();
-        if num_solutions > 0 {
-            let mut plural = "";
-            if num_solutions > 1 {
-                plural = "s";
-            }
-
-            println!("\nFound {} solution{} in {:.1?}:", num_solutions, plural, elapsed_time);
-            let mut count = 1;
-            for solution in solutions {
-                if num_solutions > 1 {
-                    println!("{}:", count);
-                    count += 1;
-                }
-                println!("{}", solution);
-            }
-        } else {
-            println!("This Sudoku is unsolvable!");
-        }
+        // let start_time = Instant::now();
+        // let solutions = solver::solve(&sudoku, terminate_on_first(&args));
+        // let elapsed_time = start_time.elapsed();
+        //
+        // let num_solutions = solutions.len();
+        // if num_solutions > 0 {
+        //     let mut plural = "";
+        //     if num_solutions > 1 {
+        //         plural = "s";
+        //     }
+        //
+        //     println!("\nFound {} solution{} in {:.1?}:", num_solutions, plural, elapsed_time);
+        //     let mut count = 1;
+        //     for solution in solutions {
+        //         if num_solutions > 1 {
+        //             println!("{}:", count);
+        //             count += 1;
+        //         }
+        //         println!("{}", solution);
+        //     }
+        // } else {
+        //     println!("This Sudoku is unsolvable!");
+        // }
     } else {
         println!("Sudoku contains repeated numbers in rows, columns or blocks.");
     }
